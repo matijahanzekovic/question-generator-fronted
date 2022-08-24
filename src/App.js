@@ -1,24 +1,29 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import { createBrowserHistory } from "history";
+import Navbar from '../src/components/core/Navbar.jsx';
+import Home from '../src/components/Home.jsx';
+import CreateQuiz from '../src/components/CreateQuiz.jsx';
+import SolveQuiz from '../src/components/SolveQuiz.jsx';
+import QuizArchives from '../src/components/QuizArchives.jsx';
+import QuestionsArchives from './components/QuestionsArchives.jsx';
 import './App.css';
 
-function App() {
+const App = () => {
+  const history = createBrowserHistory();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        {/* <Route path="/" render={() => <Navigate to="/home" element={<Home/>}/>} /> */}
+        <Route path="/" element={<Home/>} />
+        <Route path="/create-quiz" element={<CreateQuiz/>} />
+        <Route path="/solve-quiz" element={<SolveQuiz/>} />
+        <Route path="/quiz-archives" element={<QuizArchives/>} />
+        <Route path="/questions-archives" element={<QuestionsArchives/>} />
+      </Routes>
+    </Router>
   );
 }
 
