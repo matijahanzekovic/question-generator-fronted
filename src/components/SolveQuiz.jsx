@@ -7,6 +7,7 @@ const SolveQuiz = () => {
     const [quiz, setQuiz] = useState({});
     const [selectedAnswers, setSelectedAnswers] = useState([]);
     const [solvedQuiz, setSolvedQuiz] = useState({});
+    const [checked, setChecked] = useState(false);
     const location = useLocation();
 
     useEffect(() => {
@@ -38,9 +39,8 @@ const SolveQuiz = () => {
     }
 
     const solveQuiz = (request) => {
-        axios.post('/solve-quiz', request)
+        axios.post('http://localhost:8080/api/solve-quiz', request)
         .then(response => {
-            console.log(response.data);
             refreshPage();
         }).catch(error => {
             console.log(error);
@@ -87,16 +87,17 @@ const SolveQuiz = () => {
                             <>
                                 <ListGroup as="ol" key={ind}>
                                     <ListGroup.Item as="li">
-                                        <div class="form-check" onChange={e => onRadioButtonChange(e)}>
-                                            <input class="form-check-input" 
+                                        <div className="form-check" onChange={e => onRadioButtonChange(e)}>
+                                            <input className="form-check-input" 
                                                    type="radio" 
                                                    value={ans} 
                                                    name={item.id} 
                                                    id={item.id}
-                                                   checked={isChecked(item)}
+                                                //    checked={true}
+                                                //    checked={isChecked(item)}
                                                    disabled={isDisabled(item)}
                                             />
-                                            <label class="form-check-label" for={ans}>
+                                            <label className="form-check-label" for={ans}>
                                                 {ans}
                                             </label>
                                         </div>
@@ -108,7 +109,7 @@ const SolveQuiz = () => {
                 )}
                 </ListGroup>
                 <div className='text-center mt-4'>
-                    <button type="button" class="btn btn-success" onClick={e => onFinish(e)}>Finish and send answers</button>
+                    <button type="button" className="btn btn-success" onClick={e => onFinish(e)}>Finish and send answers</button>
                 </div>
             </div>
         </>
