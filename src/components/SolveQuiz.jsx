@@ -6,8 +6,7 @@ import axios from 'axios';
 const SolveQuiz = () => {
     const [quiz, setQuiz] = useState({});
     const [selectedAnswers, setSelectedAnswers] = useState([]);
-    const [solvedQuiz, setSolvedQuiz] = useState({});
-    const [checked, setChecked] = useState(false);
+    const [score, setScore] = useState(0);
     const location = useLocation();
 
     useEffect(() => {
@@ -15,6 +14,7 @@ const SolveQuiz = () => {
         axios.get(`http://localhost:8080/api/get-quiz/${id}`)
             .then(response => {
                 setQuiz(response.data);
+                setQuizScore(response.data);
             }).catch(error => {
                 console.log(error);
             });
@@ -53,12 +53,6 @@ const SolveQuiz = () => {
         solveQuiz(solveQuizRequest);
     }
 
-    const isChecked = (item) => {
-        const selectedAnswer = item.selectedAnswer;
-        const correctAnswer = item.correctAnswer;
-        return selectedAnswer !== undefined && selectedAnswer !== null && selectedAnswer === correctAnswer;
-    }
-
     const isDisabled = (item) => {
         const isCorrect = item.isCorrect;
         return isCorrect !== undefined && isCorrect !== null;
@@ -76,9 +70,28 @@ const SolveQuiz = () => {
         }
     }
 
+    const setQuizScore = (data) => {
+        let score = 0;
+        data.questions.forEach((q, i) => {
+            if (q.isCorrect === true) {
+                score += 1;
+            }
+        })
+        setScore(score);
+    }
+
     return (
         <>
             <div className='container mt-4'>
+                {
+                    quiz !== undefined && quiz.name !== undefined && quiz.name !== null &&
+                    <h4>Quiz title: {quiz.name}</h4>
+                }
+                                {
+                    score !== undefined && score !== null && score !== 0 && quiz !== undefined && quiz.questions !== undefined &&
+                        quiz.questions !== 0 &&
+                    <h4><br></br>Score: {score}/{quiz.questions.length}</h4>
+                }
                 <ListGroup as="ol" numbered>
                 {quiz && quiz.questions && quiz.questions.map((item, index) =>
                         <>
@@ -93,8 +106,7 @@ const SolveQuiz = () => {
                                                    value={ans} 
                                                    name={item.id} 
                                                    id={item.id}
-                                                //    checked={true}
-                                                //    checked={isChecked(item)}
+                                                   checked={item.selectedAnswer === ans}
                                                    disabled={isDisabled(item)}
                                             />
                                             <label className="form-check-label" for={ans}>
